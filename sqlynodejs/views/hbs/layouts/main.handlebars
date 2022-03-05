@@ -1,0 +1,144 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Articulos & Chat</title>
+    <script src="./socket.io/socket.io.js"></script>
+  </head>
+
+  <style>
+    p>i{
+    color: #74af30;
+    font-size: 9pt;
+}
+
+.container_chat_global{
+    margin: 50px auto 0px;
+    width: 100%;
+    max-width: 800px;
+}
+.container_chat{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+ul{
+    margin: 0px;
+    padding: 0px;
+}
+ul li {
+    list-style: none;
+    margin: 0px 0px 7px;
+    padding: 0px;
+}
+  </style>
+
+  <body>
+    {{{body}}}
+
+
+      <div class="container_chat_global">
+        
+        <h2>Chat con Socket.io</h2>
+
+        <div class="container_chat">
+            <div>
+                <div class="chat">
+                    <form id="data_user">
+                        <input id="email" type="text" name="email" placeholder="Ingresa tu email">
+                        <input id="user_name" type="text" name="user" placeholder="Ingresa tu usuario">
+                        <input id="mensaje" type="text" name="message" placeholder="Ingresa tu mensaje">
+                        <input type="submit" value="Enviar">
+                    </form>
+                </div>
+                <p id="parrafo"></p>
+            </div>
+          
+        </div>
+      </div>
+      
+
+    <script>
+         const socket = new io(); // usa const :
+        
+    const form_data_user = document.getElementById("data_user");
+    const form_articles = document.getElementById("add");
+    const user_list = document.getElementById("user_list");
+   
+
+    form_data_user.addEventListener("submit", e =>{
+    e.preventDefault(); 
+    let student = {
+        email: e.target[0].value,
+        user: e.target[1].value,
+        message: e.target[2].value
+    }
+    if(student.email === "" || student.user === "" || student.message === "") window.location.reload();
+    socket.emit("from_front", student);
+});
+socket.on("fill_message", data =>{
+    fill_message(data);
+});
+
+socket.on("error", data =>{
+    alert(data);
+});
+
+socket.on("init", data =>{
+    if(data.length > 0 ){
+        fill_message(data.students);
+    }
+});
+
+function fill_message(data){
+    let sms_html = ``;
+    for (const sms of data) {
+        sms_html += `<b>${sms.user}:</b> <span>${sms.message}</span> <i>${sms.fecha}</i><br>`;
+    }
+    parrafo.innerHTML = sms_html;
+}
+
+
+function fill_articles(articles){
+if(articles.length > 0){
+    tabla.innerHTML="";
+    mostrar.innerHTML="";
+    for (const article of articles) {
+        const titulo = `<td>${article.titulo}</td>`;
+        const precio = `<td>${article.precio}</td>`;
+        const thumbnail = `<td><img src="${article.thumbnail}" width="50" height="50"/></td>`;
+        tabla.innerHTML += `<tr>${titulo + precio + thumbnail}</tr>`;
+    }
+}else{
+    mostrar.innerHTML=`<h3>¡No hay articulos para mostrar!</h3>`;
+}
+}
+
+socket.on("initArticles", articles =>{
+    console.log(articles);
+    fill_articles(articles);
+});
+
+ 
+    form_articles.addEventListener("submit", e =>{
+        e.preventDefault();
+
+        const [ titulo, precio, thumbnail ] = e.target;
+
+        if(!titulo || !precio || !thumbnail) window.location.reload();
+
+        const nuevoarticulo = {
+            titulo: titulo.value,
+            precio: precio.value,
+            thumbnail: thumbnail.value
+        }
+        
+        socket.emit("newArticle", nuevoarticulo);
+    });
+
+
+    </script>
+
+  </body>
+</html>

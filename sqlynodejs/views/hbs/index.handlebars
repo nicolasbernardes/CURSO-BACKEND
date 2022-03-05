@@ -1,0 +1,48 @@
+<h1>Ingrese un Articulo</h1>
+<form class="prod-form" id="add" action="/articulos" method="POST">
+  <div id="data_article" class="d-flex flex-column align-items-center">
+    <input
+      type="text"
+      name="titulo"
+      class="form-control"
+      placeholder="Articulo"
+      style="margin-top: 15px; margin-left: 20px; margin-bottom: 25px"
+    />
+    <input
+      type="text"
+      name="precio"
+      class="form-control"
+      placeholder="Precio"
+      style="margin-left: 20px; margin-bottom: 25px"
+    />
+    <input
+      type="text"
+      name="thumbnail"
+      class="form-control"
+      placeholder="url"
+      style="margin-left: 20px; margin-bottom: 25px"
+    />
+    <button type="submit" class="btn btn-primary">Guardar Articulo</button>
+  </div>
+</form>
+
+<br />
+<div>
+  <h2 style="color: rgb(65, 55, 211)">Lista de Productos</h2>
+
+  <table id="tabla" class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Articulo</th>
+        <th scope="col">Precio</th>
+        <th scope="col"><img className="Foto" /></th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+
+  </table>
+  <div id="mostrar"></div>
+
+</div>
